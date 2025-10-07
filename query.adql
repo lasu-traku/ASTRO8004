@@ -1,0 +1,12 @@
+SELECT   gaia.source_id, gaia.ra, gaia.dec, gaia.phot_g_mean_mag, tmass.tmass_oid, tmass.j_m, tmass.h_m, tmass.ks_m
+FROM gaiadr.gaia_source AS gaia
+JOIN gaiadr.tmass_best_neighbour AS xmatch
+  ON gaia.source_id = xmatch.source_id
+JOIN gaiadr.tmass_psc AS tmass
+  ON xmatch.tmass_oid = tmass.tmass_oid
+WHERE
+  1 = CONTAINS(
+    POINT('ICRS', gaia.ra, gaia.dec),
+    CIRCLE('ICRS', 289.074, -16.323, 1)
+  )
+  AND gaia.phot_g_mean_mag < 14
